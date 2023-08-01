@@ -3,9 +3,9 @@ package com.android.criminalintent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.android.criminalintent.databinding.ListItemCrimeBinding
+import java.util.UUID
 
 /*
 * RecyclerView никогда не создает представление (View)
@@ -18,12 +18,15 @@ import com.android.criminalintent.databinding.ListItemCrimeBinding
 class CrimeHolder(
     private val binding: ListItemCrimeBinding
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(crime: Crime) {
+
+//      Лямбда (onCrimeClicked) вызывается при нажании на элемент списка
+    fun bind(crime: Crime, onCrimeClicked: (crimeId: UUID) -> Unit) {
         binding.crimeTitle.text = crime.title
         binding.crimeDate.text = crime.date.toString()
         binding.root.setOnClickListener {
-            Toast.makeText(binding.root.context, "${crime.title} clicked!", Toast.LENGTH_SHORT)
-                .show()
+            /*Toast.makeText(binding.root.context, "${crime.title} clicked!", Toast.LENGTH_SHORT)
+                .show()*/
+            onCrimeClicked(crime.id)
         }
         binding.crimeSolved.visibility = if (crime.isSolved) {
             View.VISIBLE
@@ -37,7 +40,8 @@ class CrimeHolder(
 /*  CrimeListAdapter знает все детали об элементах в списке.
     Адаптер также знает о списке преступлений, который поддерживает RecyclerView*/
 class CrimeListAdapter(
-    private val crimes: List<Crime>
+    private val crimes: List<Crime>,
+    private val onCrimeClicked: (crimeId: UUID) -> Unit
 ) : RecyclerView.Adapter<CrimeHolder>() {
 
     /*  Adapter.onCreateViewHolder(...) отвечает за создание привязки к отображению, оболочку представления
@@ -58,7 +62,7 @@ class CrimeListAdapter(
             binding.crimeTitle.text = crime.title
             binding.crimeDate.text = crime.date.toString()
         }*/
-        holder.bind(crime)
+        holder.bind(crime, onCrimeClicked)
     }
 
     /*  Сообщаем RecyclerView, сколько элементов находится в наборе данных
