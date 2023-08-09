@@ -35,6 +35,10 @@ class CrimeListViewModel : ViewModel() {
         }
     }
 
+    suspend fun addCrime(crime: Crime) {
+        crimeRepository.addCrime(crime)
+    }
+
     /*//      Создание приостанавливающей функции (suspend fun)
     suspend fun loadCrimes(): List<Crime> {
         *//*val result = mutableListOf<Crime>()
